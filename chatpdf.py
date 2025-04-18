@@ -16,11 +16,28 @@ load_dotenv()
 # Added for safety settings
 
 
-if "GOOGLE_API_KEY" not in os.environ:
-    st.error("❌ Missing Google API Key in .env file")
-    st.stop()
+# Try to get API key from environment
+api_key = os.getenv("GOOGLE_API_KEY")
 
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+# If not found in .env, ask the user to input it
+if not api_key:
+    api_key = st.text_input(
+        "Enter your Google Generative AI API Key:", type="password")
+    if not api_key:
+        st.info("Please enter your API key to continue.", icon="🗝️")
+        st.stop()
+
+# Try configuring Gemini with the provided API key
+try:
+    genai.configure(api_key=api_key)
+
+    # Validate API key with a test prompt
+    test_model = genai.GenerativeModel("gemini-1.5-flash-001")
+    _ = test_model.generate_content("Hello!").text
+
+except Exception as e:
+    st.error("Invalid or unauthorized API key. Please double-check and try again.")
+    st.stop()
 
 # ===== Core Functions =====
 
