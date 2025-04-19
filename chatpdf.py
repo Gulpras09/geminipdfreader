@@ -127,13 +127,14 @@ def handle_user_query(user_question):
     except Exception as e:
         st.error(f"🔴 Error processing query: {str(e)}")
 
+        st.set_page_config(
+            page_title="PDF Chat Assistant",
+            page_icon="📄",
+            layout="centered"
+        )
+
 
 def main():
-    st.set_page_config(
-        page_title="PDF Chat Assistant",
-        page_icon="📄",
-        layout="centered"
-    )
 
     st.title("📄 Chat with Your Documents")
     st.caption("Upload PDFs and ask questions about their content")
